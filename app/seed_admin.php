@@ -7,7 +7,21 @@ $adminUser = getenv('ADMIN_USER') ?: 'admin';
 $adminPass = getenv('ADMIN_PASS') ?: 'Admin@123';
 $adminEmail = getenv('ADMIN_EMAIL') ?: 'admin@voting.local';
 
-$stmt = db()->prepare('SELECT id FROM users WHERE username = ? LIMIT 1');
+$pdo = db();
+$tableCheck = $pdo->prepare(
+    'SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = ?'
+);
+$tableCheck->execute(['users']);
+
+if (!(int) $tableCheck->fetchColumn()) {
+    $schema = file_get_contents(__DIR__ . '/../sql/init.sql');
+    if ($schema === false) {
+        throw new RuntimeException('Database schema file is missing.');
+    }
+    $pdo->exec($schema);
+}
+
+$stmt = $pdo->prepare('SELECT id FROM users WHERE username = ? LIMIT 1');
 $stmt->execute([$adminUser]);
 
 if (!$stmt->fetch()) {
