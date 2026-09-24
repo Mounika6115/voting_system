@@ -14,7 +14,6 @@ RUN mkdir -p /var/www/html
 COPY public/ /var/www/html/public/
 COPY app/ /var/www/html/app/
 COPY config/ /var/www/html/config/
-COPY css/ /var/www/html/public/css/
 
 RUN chown -R www-data:www-data /var/www/html && \
     chmod -R 755 /var/www/html
