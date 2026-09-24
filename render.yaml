@@ -38,7 +38,7 @@ services:
   - type: pserv
     name: voting-system-db
     runtime: docker
-    plan: free
+    plan: 0.5c-512mb
     dockerfilePath: ./docker/mysql/Dockerfile
     envVars:
       - key: MYSQL_DATABASE

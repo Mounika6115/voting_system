@@ -5,13 +5,14 @@ function db(): PDO {
     static $pdo = null;
     if ($pdo === null) {
         $host = getenv('DB_HOST') ?: 'db';
+        $port = getenv('DB_PORT') ?: '3306';
         $name = getenv('DB_NAME') ?: 'voting_system';
         $user = getenv('DB_USER') ?: 'vote_user';
         $pass = getenv('DB_PASS') ?: 'vote_pass';
 
         try {
             $pdo = new PDO(
-                "mysql:host=$host;dbname=$name;charset=utf8mb4",
+                "mysql:host=$host;port=$port;dbname=$name;charset=utf8mb4",
                 $user,
                 $pass,
                 [
