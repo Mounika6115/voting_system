@@ -6,25 +6,19 @@ services:
     dockerfilePath: ./Dockerfile
     envVars:
       - key: DB_HOST
-        fromService:
-          type: pserv
-          name: voting-system-db
-          property: host
+        sync: false
 
       - key: DB_PORT
         value: "3306"
 
       - key: DB_NAME
-        value: voting_system
+        sync: false
 
       - key: DB_USER
-        value: vote_user
+        sync: false
 
       - key: DB_PASS
-        fromService:
-          type: pserv
-          name: voting-system-db
-          envVarKey: MYSQL_PASSWORD
+        sync: false
 
       - key: ADMIN_USER
         value: admin
@@ -34,26 +28,3 @@ services:
 
       - key: ADMIN_EMAIL
         value: admin@voting.local
-
-  - type: pserv
-    name: voting-system-db
-    runtime: docker
-    plan: 0.5c-512mb
-    dockerfilePath: ./docker/mysql/Dockerfile
-    envVars:
-      - key: MYSQL_DATABASE
-        value: voting_system
-
-      - key: MYSQL_USER
-        value: vote_user
-
-      - key: MYSQL_PASSWORD
-        generateValue: true
-
-      - key: MYSQL_ROOT_PASSWORD
-        generateValue: true
-
-    disk:
-      name: voting-system-mysql-data
-      mountPath: /var/lib/mysql
-      sizeGB: 10
