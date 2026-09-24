@@ -1,7 +1,16 @@
 #!/bin/sh
 set -e
 
-echo "Waiting for database at $DB_HOST..."
+if [ -z "${DB_HOST:-}" ]; then
+  if [ -n "${RAILWAY_ENVIRONMENT:-}" ]; then
+    DB_HOST="mysql.railway.internal"
+  else
+    DB_HOST="db"
+  fi
+fi
+DB_PORT="${DB_PORT:-3306}"
+
+echo "Waiting for database at $DB_HOST:$DB_PORT..."
 for i in $(seq 1 60); do
   if timeout 2 php -r '
     $h = getenv("DB_HOST"); $p = (int)(getenv("DB_PORT") ?: 3306);

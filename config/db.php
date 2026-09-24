@@ -4,7 +4,10 @@ declare(strict_types=1);
 function db(): PDO {
     static $pdo = null;
     if ($pdo === null) {
-        $host = getenv('DB_HOST') ?: 'db';
+        $host = getenv('DB_HOST');
+        if (!$host) {
+            $host = getenv('RAILWAY_ENVIRONMENT') ? 'mysql.railway.internal' : 'db';
+        }
         $port = getenv('DB_PORT') ?: '3306';
         $name = getenv('DB_NAME') ?: 'voting_system';
         $user = getenv('DB_USER') ?: 'vote_user';
